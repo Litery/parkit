@@ -7,8 +7,8 @@ setup.py file for SWIG example
 from distutils.core import setup, Extension
 
 simulation_module = Extension('_simulation',
-                           sources=['simulation_wrap.cxx', 'simulation.cpp'],
-                           )
+                              sources=['simulation_wrap.cxx', 'simulation.cpp'],
+                              )
 
 setup(name='simulation',
       version='0.1',
