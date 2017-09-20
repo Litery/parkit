@@ -2,12 +2,12 @@ from functools import partial
 
 from unittest import TestCase
 
-from simulation.simulation import pnpoly
+from simulation.simulation import pnpoly, DoubleVector
 
 
 def prepare_function(poly):
     x, y = zip(*poly)
-    return partial(pnpoly, x, y)
+    return partial(pnpoly, DoubleVector(x), DoubleVector(y))
 
 
 class TestPointInPolygon(TestCase):
