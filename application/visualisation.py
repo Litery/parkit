@@ -67,17 +67,14 @@ def update(dt):
 @window.event
 def on_draw():
     window.clear()
-    # pyglet.graphics.draw(2, pyglet.gl.GL_POINTS,
-    #                      ('v2f', bike.front + bike.back))
     glLineWidth(3)
     glBegin(GL_LINES)
-    glVertex2f(*bike.front)
-    glVertex2f(*bike.back)
-    glEnd()
-    glBegin(GL_LINES)
-    front_wheel = bike.front_wheel()
+    front_wheel = bike.front_wheel
+    back_wheel = bike.back_wheel
     glVertex2f(*front_wheel[0])
     glVertex2f(*front_wheel[1])
+    glVertex2f(*back_wheel[0])
+    glVertex2f(*back_wheel[1])
     glEnd()
 
 

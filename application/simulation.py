@@ -2,7 +2,8 @@ from math import sqrt, pow, fabs, sin, tan, copysign, cos, pi
 
 
 class Bike:
-    steering_dead_zone = 0.05
+    steering_dead_zone = 0.0005
+    wheel_proportion = 4
 
     def __init__(self, front=(1, 0), back=(0, 0)):
         self.front = front
@@ -25,18 +26,25 @@ class Bike:
         y = (self.front[1] - self.back[1]) / self.length
         return x, y
 
+    @property
     def front_wheel(self):
         x, y = self.driving_vector
         cos_sa = cos(-self.steering_angle)
         sin_sa = sin(-self.steering_angle)
         wheel_vector = x * cos_sa - y * sin_sa, \
                        x * sin_sa + y * cos_sa
+        return self._wheel(wheel_vector, self.front)
 
-        front = self.front[0] + wheel_vector[0] * self.length / 3, \
-                self.front[1] + wheel_vector[1] * self.length / 3
+    @property
+    def back_wheel(self):
+        return self._wheel(self.driving_vector, self.back)
 
-        back = self.front[0] - wheel_vector[0] * self.length / 3, \
-                self.front[1] - wheel_vector[1] * self.length / 3
+    def _wheel(self, vector, origin):
+        front = origin[0] + vector[0] * self.length / self.wheel_proportion, \
+                origin[1] + vector[1] * self.length / self.wheel_proportion
+
+        back = origin[0] - vector[0] * self.length / self.wheel_proportion, \
+               origin[1] - vector[1] * self.length / self.wheel_proportion
 
         return front, back
 
