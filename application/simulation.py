@@ -1,4 +1,4 @@
-from math import sqrt, pow, fabs, sin, tan, copysign, cos
+from math import sqrt, pow, fabs, sin, tan, copysign, cos, pi
 
 
 class Bike:
@@ -8,8 +8,37 @@ class Bike:
         self.front = front
         self.back = back
         self.length = sqrt(pow(front[0] - back[0], 2) + pow(front[1] - back[1], 2))
-        self.steering_angle = 0
+        self._steering_angle = 0
         self.velocity = 0
+
+    @property
+    def steering_angle(self):
+        return self._steering_angle
+
+    @steering_angle.setter
+    def steering_angle(self, value):
+        self._steering_angle = (fabs(value) % pi) * copysign(1, value)
+
+    @property
+    def driving_vector(self):
+        x = (self.front[0] - self.back[0]) / self.length
+        y = (self.front[1] - self.back[1]) / self.length
+        return x, y
+
+    def front_wheel(self):
+        x, y = self.driving_vector
+        cos_sa = cos(-self.steering_angle)
+        sin_sa = sin(-self.steering_angle)
+        wheel_vector = x * cos_sa - y * sin_sa, \
+                       x * sin_sa + y * cos_sa
+
+        front = self.front[0] + wheel_vector[0] * self.length / 3, \
+                self.front[1] + wheel_vector[1] * self.length / 3
+
+        back = self.front[0] - wheel_vector[0] * self.length / 3, \
+                self.front[1] - wheel_vector[1] * self.length / 3
+
+        return front, back
 
     @property
     def big_radius(self):
@@ -54,11 +83,11 @@ class Bike:
             self.back = back_x, back_y
 
         else:
-            vector_x = (self.front[0] - self.back[0]) / self.length
-            vector_y = (self.front[1] - self.back[1]) / self.length
-
-
-
-
+            distance = self.velocity * time_delta
+            x, y = self.driving_vector
+            dx = x * distance
+            dy = y * distance
+            self.front = self.front[0] + dx, self.front[1] + dy
+            self.back = self.back[0] + dx, self.back[1] + dy
 
         return self.front, self.back
